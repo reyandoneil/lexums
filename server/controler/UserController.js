@@ -92,7 +92,7 @@ class UserController {
         const { page, size, email } = req.query;
         var condition = email ? { email: { [Op.like]: `%${email}%` } } : null;
         const { limit, offset } = getPagination(page, size);
-        if (req.userData.role === 'owner') {
+        if (req.userData.role === 'big bos') {
             try {
                 const getAll = await User.findAndCountAll({
                     where: condition, limit, offset
@@ -118,15 +118,19 @@ class UserController {
     }
     static async getUserByIdHandler(req, res) {
         const id = req.params.id
-        try {
-            const dataById = await User.findOne({ where: { id: id } })
-            res.status(200).json({
-                statusCode: 200,
-                message: 'Success get user by id',
-                data: dataById
-            })
-        } catch (error) {
-
+        if(req.userData.role === 'big bos'){
+            try {
+                const dataById = await User.findOne({ where: { id: id } })
+                res.status(200).json({
+                    statusCode: 200,
+                    message: 'Success get user by id',
+                    data: dataById
+                })
+            } catch (error) {
+    
+            }
+        }else {
+            
         }
     }
     static async usesrVerfyCodeHandler(req, res) {
