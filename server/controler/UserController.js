@@ -2,7 +2,7 @@ const { User } = require('../models/index')
 const { comparePassword } = require('../utils/bcrypt')
 const { signToken } = require('../utils/jwt')
 const { uniqueString } = require('../helpers/uniqueString')
-const { verfyEmail } = require('../helpers/nodeMailer')
+const { verfyEmail } = require('../utils/nodeMailer')
 const { Op } = require('sequelize')
 const { getPagination, getPagingData } = require('../helpers/pagination')
 
@@ -83,8 +83,30 @@ class UserController {
             })
         }
     }
-    static editUserHandler(req, res) {
+    static async editUserNameHandler(req, res) {
+        try {
+            const id = req.params.id
+            const role = req.userData.role
+            if (role === 'owner') {
+                const result = await User.update({ user_name: req.body.user_name }, { where: { id: id } })
+                res.status(201).json({
+                    statusCode: 201,
+                    message: 'Success update user name',
+                    data: result
+                })
+            } else {
+                res.status(500).json({
+                    statusCode: 500,
+                    message: 'authentication error',
+                })
+            }
 
+        } catch (error) {
+            res.status(500).json({
+                statusCode: 500,
+                message: 'Failed update user name',
+            })
+        }
     }
     static deleteUserHandler(req, res) {
     }
@@ -118,7 +140,8 @@ class UserController {
     }
     static async getUserByIdHandler(req, res) {
         const id = req.params.id
-        if(req.userData.role === 'big bos'){
+        const role = req.userData.role
+        if (role === 'big bos') {
             try {
                 const dataById = await User.findOne({ where: { id: id } })
                 res.status(200).json({
@@ -127,10 +150,16 @@ class UserController {
                     data: dataById
                 })
             } catch (error) {
-    
+                res.status(500).json({
+                    statusCode: 500,
+                    message: 'Server error'
+                })
             }
-        }else {
-            
+        } else {
+            res.status(200).json({
+                statusCode: 500,
+                message: 'you not authenticated',
+            })
         }
     }
     static async usesrVerfyCodeHandler(req, res) {
@@ -160,7 +189,13 @@ class UserController {
             })
         }
     }
-    static resendUsesrVerfyCodeHandler(req, res) {
+    static userResetPassword(req, res) {
+
+    }
+    static UserGetOldPassword(req, res) {
+
+    }
+    static UserUpadateNewPassword(req, res) {
 
     }
 

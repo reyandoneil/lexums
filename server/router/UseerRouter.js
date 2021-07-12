@@ -5,7 +5,8 @@ const {
     loginUserHandler,
     usesrVerfyCodeHandler,
     getAllUserHandler,
-    getUserByIdHandler
+    getUserByIdHandler,
+    editUserNameHandler
 } = require('../controler/UserController')
 const authentication = require('../utils/authentication')
 
@@ -19,7 +20,7 @@ route.post('/login', limit, loginUserHandler)
 route.post('/signup', limit, signupUserHandler)
 route.use(authentication)
 route.delete('/delete', deleteUserHandler)
-route.patch('/edit/:id')
+route.patch('/edit/:id', editUserNameHandler)
 route.get('/getUserId/:id', getUserByIdHandler)
 route.get('/verfy/:code', usesrVerfyCodeHandler)
 route.get('/getAllUser', getAllUserHandler)
