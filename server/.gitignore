@@ -1,5 +1,5 @@
 node_modules
-config
-seeders
-bin
-.env
+# config
+# seeders
+# bin
+# .env
